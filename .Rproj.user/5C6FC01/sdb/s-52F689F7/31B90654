@@ -1,0 +1,17 @@
+{
+    "contents" : "# server.R\n\nlibrary(quantmod)\nsource(\"helpers.R\")\nlibrary(caret)\nlibrary(forecast)\nSys.setenv(LANG=\"en\")\nSys.setlocale(local=\"en_US.UTF-8\")\n\nshinyServer(function(input, output) {\n\n  dataInput<-reactive({\n    getSymbols(input$symb, src = \"yahoo\", \n               from = input$dates[1],\n               to = input$dates[2],\n               auto.assign = FALSE)\n  })\n  \n  finalInput<-reactive({\n    if (!input$adjust) return(dataInput())\n    adjust(dataInput())\n  })\n  \n  output$plot <- renderPlot({\n    d<-finalInput()[,4]\n    mod_ts<-bats(d)\n    fcast<-forecast(mod_ts, level=95, h=20)\n    #chartSeries(finalInput(), theme = chartTheme(\"white\"), \n    #  type = \"line\", log.scale = input$log, TA = NULL, name=input$symb)\n    plot(fcast)\n  })\n  \n})",
+    "created" : 1453665250259.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1151758151",
+    "id" : "31B90654",
+    "lastKnownWriteTime" : 1453757835,
+    "path" : "~/GitHub/DevelopingDataProducts/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
